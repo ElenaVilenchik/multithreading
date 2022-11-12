@@ -3,7 +3,7 @@ package telran.multithreading;
 public class ApplThread extends Thread {
 	private static final long RANDOM_NUMBER = (int) (Math.random() * 4 + 2);
 	private int nSteps;
-	static int a = -1;
+	static int placeOfWin = 0;
 
 	public ApplThread(int nSteps) {
 		this.nSteps = nSteps;
@@ -20,8 +20,8 @@ public class ApplThread extends Thread {
 			}
 			System.out.printf("%s stopped... \n", Thread.currentThread().getName());
 		}
-		a++;
-		if (a == 0) {
+		placeOfWin++;
+		if (placeOfWin == 1) {
 			System.out.printf("Congratulations to %s winner!!! \n", Thread.currentThread().getName());
 		} else
 			System.out.printf("Congratulations to %s finish!!! \n", Thread.currentThread().getName());
