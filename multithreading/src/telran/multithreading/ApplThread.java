@@ -1,7 +1,7 @@
 package telran.multithreading;
 
 public class ApplThread extends Thread {
-	private static final long RANDOM_NUMBER = (int) (Math.random() * 3 + 2);
+	private static final long RANDOM_NUMBER = (int) (Math.random() * 4 + 2);
 	private int nSteps;
 	static int a = -1;
 
