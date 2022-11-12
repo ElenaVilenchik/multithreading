@@ -1,6 +1,7 @@
 package telran.multithreading;
 
 public class ApplThread extends Thread {
+	private static final long RANDOM_NUMBER = (int) (Math.random() * 3 + 2);
 	private int nSteps;
 	static int a = -1;
 
@@ -10,11 +11,10 @@ public class ApplThread extends Thread {
 
 	@Override
 	public void run() {
-		int randomNumber = (int) (Math.random() * 3 + 2);
 		for (int i = 0; i < nSteps; i++) {
 			System.out.printf("%s started... \n", Thread.currentThread().getName());
 			try {
-				sleep(randomNumber);
+				sleep(RANDOM_NUMBER);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
