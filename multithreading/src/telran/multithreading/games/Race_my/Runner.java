@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class Runner extends Thread {
 
 	private int nSteps;
-	public static Map<String, Integer> timesRes = new HashMap<String, Integer>();
+	public static Map<String, Double> timesRes = new HashMap<String, Double>();
 
 	public Runner(int nSteps) {
 		this.nSteps = nSteps;
@@ -20,16 +20,13 @@ public class Runner extends Thread {
 		Random rand = new Random();
 		Instant startTime = Instant.now();
 		for (int i = 0; i < nSteps; i++) {
-			System.out.printf("%s started... \n", Runner.currentThread().getName());
 			try {
 				sleep(rand.nextInt(4) + 2);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			System.out.printf("%s stopped... \n", Runner.currentThread().getName());
 		}
-		int time = (int) ChronoUnit.MILLIS.between(startTime, Instant.now());
-		System.out.printf("%s finish time...%s \n", time, Runner.currentThread().getName());
+		double time = ChronoUnit.MILLIS.between(startTime, Instant.now());
 		timesRes.putIfAbsent(Runner.currentThread().getName(), time);
 	}
 
@@ -48,7 +45,7 @@ public class Runner extends Thread {
 //	}
 	
 	public static void resultsTtable() {
-		Map<String, Integer> timesSorted = timesRes.entrySet()
+		Map<String, Double> timesSorted = timesRes.entrySet()
 	              .stream()
 	              .sorted(Map.Entry.comparingByValue())
 	              .collect(Collectors
@@ -59,7 +56,7 @@ public class Runner extends Thread {
 		
 		System.out.printf("\nplace%s racer number%s time\n", " ".repeat(7), " ".repeat(11));
 		int i = 1;
-		for (Entry<String, Integer> r : timesSorted.entrySet())
+		for (Entry<String, Double> r : timesSorted.entrySet())
 			System.out.println(i++ + " ".repeat(15) 
 					+ r.getKey().substring(r.getKey().indexOf("-") + 1) + " ".repeat(20)
 					+ r.getValue());
