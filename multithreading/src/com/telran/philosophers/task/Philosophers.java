@@ -70,8 +70,6 @@ public class Philosophers {
 				while (true) {
 					// thinking
 					doAction(System.nanoTime() + ": Thinking");
-					Thread.currentThread();
-					Thread.sleep(1);
 					synchronized (leftFork) {
 						doAction(System.nanoTime() + ": Picked up left fork");
 						synchronized (rightFork) {
