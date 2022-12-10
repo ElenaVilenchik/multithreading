@@ -1,21 +1,20 @@
 package telran.multithreading.addTasks;
+
+import java.util.stream.*;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.TimeoutException;
 
 /**
- * Class Barrier allows a set of threads to all wait for each other to reach a common barrier point.
+ * Class Barrier allows a set of threads to all wait for each other to reach a
+ * common barrier point.
  */
 public class Barrier {
-	private final int threadsCount;
-	private Semaphore s, exclusao, counter;
+	private int threadsCount;
 
 	public Barrier(int threadsCount) {
 		this.threadsCount = threadsCount;
-		counter = new Semaphore(0);
-		s = new Semaphore(0);
-		exclusao = new Semaphore(1);
 	}
 
 	/**
@@ -26,15 +25,11 @@ public class Barrier {
 	 */
 
 	public synchronized void await() throws InterruptedException {
-		exclusao.acquire();
-		if (counter.availablePermits() < threadsCount-1) {
-			counter.release();
-			exclusao.release();
-			s.acquire();
-		} else {
-			exclusao.release();
-			for (int i = 0; i < threadsCount; i++) {
-				s.release();
+		for (;;) {
+			int index = --threadsCount;
+			if (index == 0) {
+				notifyAll();
+				break;
 			}
 		}
 	}
@@ -52,12 +47,14 @@ public class Barrier {
 	 *  9599 Thread Thread-4 passed the barrrier
 	 *  9599 Thread Thread-1 passed the barrrier
 	 *  9599 Thread Thread-2 passed the barrrier
+	 * @throws InterruptedException 
 	 */
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException  {
+		
 		final int THREADS_COUNT = 5;
 		long startTime = System.currentTimeMillis();
 		Barrier barrier = new Barrier(THREADS_COUNT);
-
+//		CyclicBarrier barrier = new CyclicBarrier(THREADS_COUNT);
 		Runnable r = () -> {
 			try {
 				Thread.sleep((int) (Math.random() * 10000));
@@ -66,13 +63,15 @@ public class Barrier {
 			}
 			System.out.printf("%4d Thread %s arrived to barrier%n", System.currentTimeMillis() - startTime,
 					Thread.currentThread().getName());
-			try {
-				barrier.await();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			System.out.printf("%4d Thread %s passed the barrier%n", System.currentTimeMillis() - startTime,
+								
+										try {
+											barrier.await();
+										} catch (InterruptedException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+																								
+		System.out.printf("%4d Thread %s passed the barrier%n", System.currentTimeMillis() - startTime,
 					Thread.currentThread().getName());
 		};
 
